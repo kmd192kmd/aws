@@ -148,6 +148,7 @@ EC2 서비스
 원격 EC2 서버 접속하기
 - SSH 클라이언트 툴
 - PUTTY
+- MobaXterm
 
 
 
@@ -157,3 +158,24 @@ EC2 할당된 IP
 - EC2가 운영 중일 때만 사용 > 중지/종료 > 공인 IP 다시 회수
 
 - 중지/종료 > 공인 IP 교체
+
+
+Elastic IP, 탄력적 IP
+
+
+
+
+패키지 최신으로 업데이트
+- $ sudo apt-get update
+- $ sudo apt-get upgrade
+
+
+서버 타임존 설정하기
+- $ date
+- $ timedatectl
+- $ sudo timedatectl set-timezone Asia/Seoul
+
+
+대부분 터미널
+- 복사: Ctrl + C > Ctrl + Insert
+- 붙여넣기: Ctrl + V > Shift + Insert
