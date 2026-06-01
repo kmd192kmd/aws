@@ -179,3 +179,178 @@ Elastic IP, 탄력적 IP
 대부분 터미널
 - 복사: Ctrl + C > Ctrl + Insert
 - 붙여넣기: Ctrl + V > Shift + Insert
+
+
+
+EC2 운용
+1. 컴퓨팅 성능 조절(t3.small)
+    1.1 초기 설정하기
+    1.2 운영 중 수정하기
+
+2. 스토리지 용량 조절
+    2.1 초기 볼륨 + 기존 EC2에게 추가 볼륨 연결
+    2.2 기존 볼륨 확장
+
+2.1
+    a. EBS 볼륨 추가 + EC2 연결
+        $ free -h # 메모리 사용량
+        $ df -h # 스토리 사용량
+        $ lsblk # 시스템에 연결된 모든 블럭 디바이스(EBS, HDD, SSD) 목록
+
+        $ sudo mkfs -t ext4 /dev/nvme1n1 # 포맷
+
+        $ sudo mkdir /data # 마운트용 폴더
+
+        $ sudo mount /dev/nvme1n1 /data # EBS 볼륨 + 폴더 마운트
+
+    b. EBS 볼륨을 EC2와 분리하기
+        $ sudo umount /data # 우분투에서 볼륨 분리
+
+        $ sudo rmdir /data # 더 이상 안쓰는 폴더 삭제
+
+
+2.2
+    $ df -h # 현재 용량 확인
+    - 볼륨 > 16GB
+
+    $ lsblk # 이름 확인
+
+    # 파티션 크기 확장
+    # sudo growpart /dev/디스크명 파티션순서
+    $ sudo growpart /dev/nvme0n1 1 
+    
+    $ lsblk # 용량 확장 확인
+
+    $ sudo resize2fs /dev/nvme0n1p1 # 파티션순서
+
+
+
+
+
+EC2 자바 운영 환경 설치하기
+1. Servlet/JSP or Spring Legacy > JDK + 톰캣
+2. Spring Boot > JDK + X
+
+
+EC2 + JDK 설치
+$ sudo apt-get update
+$ sudo apt-get install openjdk-21-jdk
+
+
+# Temurin JDK 21
+wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo apt-key add -
+echo "deb https://packages.adoptium.net/artifactory/deb $(lsb_release -sc) main" | sudo tee /add/etc/apt/sources.list.get/adoptium.list
+
+sudo apt-get update
+sudo apt-get install temurin-21-jdk
+
+
+# Corretto JDK 21
+wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
+
+sudo apt-get update
+sudo apt-get install java-21-amazon-corretto-jdk
+
+
+
+
+JDK 환경 변수 설정하기
+- JAVA_HOME
+$ sudo vi /etc/environment # 시스템 전역 설정 > 환경 변수 등록
+
+$ source /etc/environment # 시스템에 바로 적용
+
+$ echo $JAVA_HOME
+
+JDK 설치 경로?
+- /usr/lib/jvm/java-21-openjdk-amd64
+
+
+스프링 부트 실행
+$ java -jar memo-0.0.1-SNAPSHOT.jar # Foreground 실행 > 터미널을 닫으면 종료
+
+$ nohup java -jar memo-0.0.1-SNAPSHOT.jar > application.log 2>&1 &
+
+$ ps -ef | grep java
+
+$ tail -f application.log
+
+
+스프링 부트 중단
+$ ps -ef | grep java
+
+$ kill <PID>
+$ kill 44325
+$ kill -9 44325 # 강제 종료
+
+
+AWS
+- Spring: EC2
+- Oracle: EC2 or RDS
+- MySQL: RDS
+
+AWS + Docker
+- Spring + Oracle Container
+
+
+
+
+
+
+CI/CD
+- 전제조건: Git(GitHub), Docker
+- Continuous Integration, 지속적인 통합
+    - 개발자들이 작성한 코드를 중앙 저장소에 병합하고, 자동으로 빌드 및 테스트하여 코드의 오류를 조기에 발견하는 과정입니다.
+- Continuous Delivery/Deployment, 지속적인 전달/배포
+    - 테스트를 통과한 코드를 실제 운영 환경에 릴리스할 준비를 하거나(전달), 자동으로 배포(배포)하여 사용자가 즉시 새로운 기능을 사용할 수 있게 하는 단계입니다.
+
+
+
+
+
+
+EC2 설정하기
+1. 시간대 설정하기
+- $ timedatectl
+- $ sudo timedatectl set-timezone Asia/Seoul
+
+2. 리포지토리 + 패키지 업데이트
+- $ sudo apt-get update && upgrade
+
+3. JDK 설치하기
+- $ sudo apt-get install openjdk-21-jdk
+- $ sudo vi /etc/environment # 시스템 전역 설정 > 환경 변수 등록
+    JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+- $ source /etc/environment # 시스템에 바로 적용
+- $ echo $JAVA_HOME
+JDK 설치 경로?
+- /usr/lib/jvm/java-21-openjdk-amd64
+
+4. 스왑 메모리 > 2GB
+
+$ cd /
+
+$ sudo fallocate -l 2G /swapfile
+
+$ sudo chmod 600 /swapfile
+
+$ sudo mkswap /swapfile
+
+$ sudo swapon /swapfile
+
+$ sudo vi /etc/fstab
+
+# 한줄 추가하기
+/swapfile swap swap defaults 0 0 
+
+# 확인하기
+$ sudo swapon --show 
+
+$ free -h
+
+
+5. 도커 설치하기
+
+6. 도커 컴포즈 설치하기
+

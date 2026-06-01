@@ -1,0 +1,22 @@
+########## 이전 방식(선택 1)
+$ sudo curl -L "https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+########## 이전 방식(선택 1)
+
+
+########## 최근 방식(선택 2)
+# 도커 컴포즈 플러그인 디렉토리 생성
+$ mkdir -p ~/.docker/cli-plugins/
+
+# 최신 버전의 도커 컴포즈 다운로드 (v2.29.3)
+$ curl -SL https://github.com/docker/compose/releases/download/v2.29.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+
+# 실행 권한 부여
+$ chmod +x ~/.docker/cli-plugins/docker-compose
+
+# 설치 확인
+$ docker compose version
+########## 최근 방식(선택 2)
